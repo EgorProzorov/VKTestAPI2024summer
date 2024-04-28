@@ -1,0 +1,10 @@
+fastapi[all]~=0.110.2
+sqlalchemy~=2.0.29
+pydantic~=2.7.1
+bcrypt
+python-jose[cryptography]
+pytest
+uvicorn
+
+passlib~=1.7.4
+jose
