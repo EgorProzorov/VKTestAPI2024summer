@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
 
-from . import auth, schemas, models
-from .models import User
+import auth
+import schemas
+import models
+from models import User
 from passlib.context import CryptContext
 # import auth
 # import models

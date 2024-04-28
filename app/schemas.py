@@ -19,7 +19,7 @@ class Note(NoteBase):
     owner_id: int
 
     class Config:
-        from_attributes = True  # Изменено с orm_mode на from_attributes
+        from_attributes = True
 
 
 class UserBase(BaseModel):
@@ -37,7 +37,7 @@ class User(UserBase):
     notes: List[Note] = []
 
     class Config:
-        from_attributes = True  # Изменено с orm_mode на from_attributes
+        from_attributes = True
 
 
 class Token(BaseModel):

@@ -1,28 +1,28 @@
 from datetime import timedelta
-
+import os
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from . import auth, crud, database, models, schemas
-from .database import init_db
-# import crud
-# import database
-# import models
-# import schemas
+import auth
+import crud
+import models
+import schemas
+import database
+import logging
+
 
 app = FastAPI()
+logging.basicConfig(level=logging.INFO)
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+database.init_db()
 
-print("Initializing database...")
-init_db()
-print("Database tables created.")
+
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
-    # Проверяем, существует ли уже пользователь с таким именем
     db_user = crud.get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
-    # Если пользователя нет, создаем нового с хэшированным паролем
     return crud.create_user(db=db, user=user)
 
 
