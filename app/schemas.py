@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import List, Optional
-
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class NoteBase(BaseModel):
@@ -19,16 +18,14 @@ class Note(NoteBase):
     owner_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class UserBase(BaseModel):
     username: str
-    password: str
 
 
-class UserCreate(BaseModel):
-    username: str
+class UserCreate(UserBase):
     password: str
 
 
@@ -37,7 +34,7 @@ class User(UserBase):
     notes: List[Note] = []
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class Token(BaseModel):

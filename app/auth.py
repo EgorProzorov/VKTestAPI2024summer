@@ -21,17 +21,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def verify_password(plain_password, hashed_password):
-    """Проверка пароля"""
     return pwd_context.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password):
-    """Хэширование пароля"""
     return pwd_context.hash(password)
 
 
 def authenticate_user(db: Session, username: str, password: str):
-    """Аутентификация пользователя по имени пользователя и паролю"""
     user = db.query(User).filter(User.username == username).first()
     if not user:
         return False
@@ -41,7 +38,6 @@ def authenticate_user(db: Session, username: str, password: str):
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
-    """Создание JWT токена"""
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -53,7 +49,6 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    """Получение текущего пользователя из токена"""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -71,5 +66,3 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise credentials_exception
     return user
-
-

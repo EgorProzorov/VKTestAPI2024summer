@@ -1,36 +1,31 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
-from sqlalchemy import inspect
-from models import User, Note
+from models import User, Note, Base
 
 SQLALCHEMY_DATABASE_URL = "sqlite:////Users/egorprozorov/PycharmProjects/WKTestAPI2024summer/app/test.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False}
+    connect_args={"check_same_thread": False},
+    echo=True
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
-
 
 def init_db():
-    engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}, echo=True)
-    print("Creating table...")
-    Base.metadata.create_all(bind=engine)
-    print("Tables created")
-    inspector = inspect(engine)
-    tables = inspector.get_table_names()
-    if 'users' not in tables:
+    print("Creating tables...")
+    try:
         Base.metadata.create_all(engine)
+        print("Tables created successfully.")
+    except Exception as e:
+        print("Error creating tables:", e)
 
 
-def add_test_data(engine):
+def add_test_data(engin):
     # Создаем новую сессию
-    with Session(engine) as session:
+    with Session(engin) as session:
         # Добавляем тестового пользователя
         user1 = User(username='testuser1', hashed_password='hashedpassword1')
         user2 = User(username='testuser2', hashed_password='hashedpassword2')

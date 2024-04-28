@@ -1,5 +1,4 @@
 from datetime import timedelta
-import os
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -23,7 +22,8 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
     db_user = crud.get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
-    return crud.create_user(db=db, user=user)
+    created_user = crud.create_user(db=db, user=user)
+    return created_user
 
 
 @app.post("/token", response_model=schemas.Token)
@@ -47,7 +47,6 @@ def create_note(note: schemas.NoteCreate, db: Session = Depends(database.get_db)
 
 
 @app.get("/notes/", response_model=list[schemas.Note])
-def read_notes(skip: int = 0, limit: int = 100, db: Session = Depends(database.get_db),
-               current_user: models.User = Depends(auth.get_current_user)):
+def read_notes(skip: int = 0, limit: int = 100, db: Session = Depends(database.get_db)):
     notes = crud.get_notes(db, skip=skip, limit=limit)
     return notes

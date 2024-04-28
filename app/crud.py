@@ -1,19 +1,17 @@
 from sqlalchemy.orm import Session
 
-import auth
 import schemas
 import models
 from models import User
 from passlib.context import CryptContext
-# import auth
-# import models
-# import schemas
 
 
 def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = pwd_context.hash(user.password)
